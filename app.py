@@ -44,8 +44,8 @@ class App:
 
     def crear_tab_mapeo(self):
         self.btn_iniciar = tk.Button(self.tab_mapeo, text="Iniciar Mapeo", command=self.iniciar_mapeo_ventana)
-        self.btn_iniciar.pack(pady=10, side=tk.TOP)  # Align to the top
-        
+        self.btn_iniciar.pack(pady=10, side=tk.TOP)
+
         self.btn_detener = tk.Button(self.tab_mapeo, text="Detener Mapeo", command=self.detener_mapeo_ventana)
         self.btn_detener.pack(side=tk.TOP)  # Align to the top
         
@@ -67,6 +67,10 @@ class App:
         
     def seleccionar_ventana(self):
         self.selected_window = self.window_manager.select_window(self.combobox_ventanas)
+        if self.selected_window:
+            self.notebook.select(self.tab_mapeo)  # Cambia a la pestaña de mapeo
+            self.notebook.tab(self.tab_seleccion, state="disabled")  # Bloquea la pestaña de selección
+            self.iniciar_mapeo_ventana()  # Inicia el mapeo automáticamente
     
     def iniciar_mapeo_ventana(self):
         if self.selected_window:
@@ -92,19 +96,21 @@ class App:
         else:
             print("No hay clics para guardar.")
     
+    def registrar_clic(self, x, y):
+        self.clicks.append((x, y))
+        self.canvas.create_oval(x-5, y-5, x+5, y+5, fill="yellow")
+        print(f"Clic detectado en: ({x}, {y})")
+
+        # Muestra los datos en el widget Text
+        self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
+        self.text_datos.see(tk.END)  # Autoscroll al final del texto
+
     def monitorear_clics_ventana(self):
-        while self.mapping_active and self.selected_window:
-            x, y = pyautogui.position()
-            if self.selected_window.isActive:
-                self.clicks.append((x, y))
-                self.canvas.create_oval(x-5, y-5, x+5, y+5, fill="yellow")
-                print(f"Clic detectado en: ({x}, {y})")
-
-                # Muestra los datos en el widget Text
-                self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
-                self.text_datos.see(tk.END)  # Autoscroll al final del texto
-
-            time.sleep(0.1)
+        if self.mapping_active and self.selected_window:
+            x, y = pyautogui.position() 
+            if self.selected_window.isActive: # Registra solo si la ventana seleccionada está activa
+                self.registrar_clic(x, y)
+                self.mapping_active = False  # Detiene el mapeo después de un clic
 
 root = tk.Tk()
 app = App(root)

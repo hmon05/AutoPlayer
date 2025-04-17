@@ -81,8 +81,7 @@ class App:
     
     def iniciar_mapeo_ventana(self):
         if self.selected_window:
-            self.mapping_active = True
-            
+            self.mapping_active = True            
             print(f"Iniciando mapeo de clics en la ventana: {self.selected_window}")
             threading.Thread(target=self.monitorear_clics_ventana, daemon=True).start()
         else:
@@ -102,12 +101,10 @@ class App:
         else:
             print("No hay clics para guardar.")
     
-    def registrar_clic(self, x, y):
-      
+    def registrar_clic(self, x, y):      
         self.clicks.append((x, y))
         self.canvas.create_oval(x-5, y-5, x+5, y+5, fill="yellow")
         print(f"Clic detectado en: ({x}, {y})")
-
         # Muestra los datos en el widget Text
         self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
         self.text_datos.see(tk.END)  # Autoscroll al final del texto

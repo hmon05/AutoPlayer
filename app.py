@@ -113,7 +113,7 @@ class App:
             if self.selected_window and self.selected_window.isActive:
                 x, y = pyautogui.position()
                 self.registrar_clic(x, y)
-            time.sleep(0.1)
+            time.sleep(1)
 
 root = tk.Tk()
 app = App(root)

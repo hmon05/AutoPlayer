@@ -56,6 +56,11 @@ class App:
         self.text_datos = tk.Text(self.tab_mapeo, height=10, width=50)
         self.text_datos.pack(side=tk.TOP)
         
+    def inicializar_mapeo(self):
+        self.clicks = []
+        self.limpiar_canvas()
+        self.dibujar_grid()
+
     def dibujar_grid(self):
         for i in range(0, 600, 20):  # Dibuja líneas verticales cada 20 píxeles
             self.canvas.create_line(i, 0, i, 400, fill="lightgray")
@@ -70,14 +75,12 @@ class App:
         if self.selected_window:
             self.notebook.select(self.tab_mapeo)  # Cambia a la pestaña de mapeo
             self.notebook.tab(self.tab_seleccion, state="disabled")  # Bloquea la pestaña de selección
-            self.iniciar_mapeo_ventana()  # Inicia el mapeo automáticamente
+            self.inicializar_mapeo()
     
     def iniciar_mapeo_ventana(self):
         if self.selected_window:
             self.mapping_active = True
-            self.clicks = []
-            self.limpiar_canvas()
-            self.dibujar_grid()
+            
             print(f"Iniciando mapeo de clics en la ventana: {self.selected_window}")
             self.monitorear_clics_ventana()
         else:

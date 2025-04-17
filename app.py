@@ -84,7 +84,6 @@ class App:
             self.mapping_active = True
             
             print(f"Iniciando mapeo de clics en la ventana: {self.selected_window}")
-            self.monitorear_clics_ventana()
             threading.Thread(target=self.monitorear_clics_ventana, daemon=True).start()
         else:
             print("Selecciona una ventana primero.")
@@ -116,7 +115,6 @@ class App:
             print(f"Error en registrar_clic: {e}")
 
     def monitorear_clics_ventana(self):
-        time.sleep(0.01)
         
         while self.mapping_active:
             if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) < 0:

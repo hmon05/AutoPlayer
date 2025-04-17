@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 import json
-import pyautogui
+import win32api
+import win32con
 import time
 
 class App:
@@ -110,10 +111,10 @@ class App:
 
     def monitorear_clics_ventana(self):
         while self.mapping_active:
-            if self.selected_window and self.selected_window.isActive:
-                x, y = pyautogui.position()
-                self.registrar_clic(x, y)
-            time.sleep(1)
+            if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) < 0:
+                x, y = win32api.GetCursorPos()
+                self.registrar_clic(x,y)  
+    
 
 root = tk.Tk()
 app = App(root)

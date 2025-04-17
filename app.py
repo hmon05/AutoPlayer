@@ -3,6 +3,7 @@ from tkinter import ttk
 import json
 import win32api
 import win32con
+import threading
 import time
 
 class App:
@@ -84,6 +85,7 @@ class App:
             
             print(f"Iniciando mapeo de clics en la ventana: {self.selected_window}")
             self.monitorear_clics_ventana()
+            threading.Thread(target=self.monitorear_clics_ventana, daemon=True).start()
         else:
             print("Selecciona una ventana primero.")
     
@@ -91,6 +93,7 @@ class App:
         self.mapping_active = False
         print("Mapeo detenido.")
     
+
     def guardar_clics_ventana(self):
         if self.clicks and self.selected_window:
             filename = f"clics_{self.selected_window.title.replace('.exe', '').replace(' ', '_')}.json"
@@ -101,19 +104,25 @@ class App:
             print("No hay clics para guardar.")
     
     def registrar_clic(self, x, y):
-        self.clicks.append((x, y))
-        self.canvas.create_oval(x-5, y-5, x+5, y+5, fill="yellow")
-        print(f"Clic detectado en: ({x}, {y})")
+        try:
+            self.clicks.append((x, y))
+            self.canvas.create_oval(x-5, y-5, x+5, y+5, fill="yellow")
+            print(f"Clic detectado en: ({x}, {y})")
 
-        # Muestra los datos en el widget Text
-        self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
-        self.text_datos.see(tk.END)  # Autoscroll al final del texto
+            # Muestra los datos en el widget Text
+            self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
+            self.text_datos.see(tk.END)  # Autoscroll al final del texto
+        except Exception as e:
+            print(f"Error en registrar_clic: {e}")
 
     def monitorear_clics_ventana(self):
+        time.sleep(0.01)
+        
         while self.mapping_active:
             if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) < 0:
                 x, y = win32api.GetCursorPos()
                 self.registrar_clic(x,y)  
+                time.sleep(0.1)
     
 
 root = tk.Tk()

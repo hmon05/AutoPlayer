@@ -18,7 +18,7 @@ class App:
         self.notebook.add(self.tab_seleccion, text="Selección de Programa")
         self.notebook.add(self.tab_mapeo, text="Mapeo de Clics")
     
-        self.crear_tab_seleccion()  # Llama a crear_tab_seleccion aquí
+        
         self.crear_tab_mapeo()  # Llama a crear_tab_mapeo aquí
     
         self.selected_window = None

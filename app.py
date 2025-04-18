@@ -105,14 +105,14 @@ class App:
             # Coordenadas relativas a la región
             relative_x_region = relative_x_full - self.region_left
             relative_y_region = relative_y_full - self.region_top
-            self.clicks.append((relative_x_region, relative_y_region))
+            self.clicks.append((x, y))
             
             canvas_x = (relative_x_region / self.region_width) * 600
             canvas_y = (relative_y_region / self.region_height) * 400
 
             self.canvas.create_oval(canvas_x - 5, canvas_y - 5, canvas_x + 5, canvas_y + 5, fill="yellow")
             print(f"Clic relativo a region detectado en: ({relative_x_region}, {relative_y_region})")
-            self.text_datos.insert(tk.END, f"Clic en: ({relative_x_region}, {relative_y_region})\n")
+            self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
             self.text_datos.see(tk.END)  # Autoscroll al final del texto
         except Exception as e:
             print(f"Error en registrar_clic: {e}")

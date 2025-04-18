@@ -6,11 +6,18 @@ import win32con
 import threading
 import time
 from modules import threads
+ancho, alto = 400 , 700
 
 class App:
     def __init__(self, master):
         self.master = master
-        master.title("Mapeo de Clics")
+        master.title("BOT de Clics")
+        
+        ancho_pantalla = root.winfo_screenwidth()
+        alto_pantalla = root.winfo_screenheight()
+        x = (ancho_pantalla // 2) - (ancho // 2)
+        y = (alto_pantalla // 2) - (alto // 2)
+        master.geometry(f"{ancho}x{alto}+{x}+{y}")
         
         from modules.window_manager import WindowManager
         self.notebook = ttk.Notebook(master)
@@ -23,7 +30,7 @@ class App:
         self.notebook.add(self.tab_mapeo, text="Mapeo de Clics")
         
         #Tab Mapeo
-        self.canvas = tk.Canvas(self.tab_mapeo, bg="white", width=600, height=400)
+        self.canvas = tk.Canvas(self.tab_mapeo, bg="white", width=ancho, height=alto)
         
         self.crear_tab_mapeo()  # Llama a crear_tab_mapeo aquí
     
@@ -55,9 +62,9 @@ class App:
         self.btn_guardar = tk.Button(self.tab_mapeo, text="Guardar Clics", command=self.guardar_clics_ventana)
         self.btn_guardar.pack(side=tk.TOP)  # Align to the top
 
-        self.canvas.pack(side=tk.TOP)
+        self.canvas.pack(pady=1)
         self.text_datos = tk.Text(self.tab_mapeo, height=10, width=50)
-        self.text_datos.pack(side=tk.TOP)
+        self.text_datos.pack(pady=1)
         
     def inicializar_mapeo(self):
         self.clicks = []
@@ -65,10 +72,10 @@ class App:
         self.dibujar_grid()
 
     def dibujar_grid(self):
-        for i in range(0, 600, 20):  # Dibuja líneas verticales cada 20 píxeles
-            self.canvas.create_line(i, 0, i, 400, fill="lightgray")
-        for i in range(0, 400, 20):  # Dibuja líneas horizontales cada 20 píxeles
-            self.canvas.create_line(0, i, 600, i, fill="lightgray")
+        for i in range(0, alto, 20):  # Dibuja líneas verticales cada 20 píxeles
+            self.canvas.create_line(i, 0, i, ancho, fill="lightgray")
+        for i in range(0, ancho, 20):  # Dibuja líneas horizontales cada 20 píxeles
+            self.canvas.create_line(0, i, alto, i, fill="lightgray")
 
     def limpiar_canvas(self):
         self.canvas.delete("all")  # Elimina todos los elementos del Canvas
@@ -86,10 +93,10 @@ class App:
             self.window_left = self.selected_window.left
             self.window_top = self.selected_window.top
 
-            self.region_left = 375
+            self.region_left = 380
             self.region_top = 40
-            self.region_width = 1168 - 375
-            self.region_height = 835 - 40
+            self.region_width = 1168 - 380
+            self.region_height = 840 - 40
     
     def registrar_clic(self, x, y):
         try:
@@ -107,8 +114,8 @@ class App:
             relative_y_region = relative_y_full - self.region_top
             self.clicks.append((x, y))
             
-            canvas_x = (relative_x_region / self.region_width) * 600
-            canvas_y = (relative_y_region / self.region_height) * 400
+            canvas_x = (relative_x_region / self.region_width) *  alto
+            canvas_y = (relative_y_region / self.region_height) * ancho
 
             self.canvas.create_oval(canvas_x - 5, canvas_y - 5, canvas_x + 5, canvas_y + 5, fill="yellow")
             print(f"Clic relativo a region detectado en: ({relative_x_region}, {relative_y_region})")
@@ -125,6 +132,9 @@ class App:
             self.stop_thread = True
             self.thread.join()
             print(f"Clics guardados en {filename}")
+            self.limpiar_canvas()
+            self.dibujar_grid()
+            self.clicks = []
         else:
             print("No hay clics para guardar.")
     

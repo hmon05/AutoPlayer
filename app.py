@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog
 import json
 import win32api
 import win32con
@@ -132,16 +133,23 @@ class App:
             print(f"Error en registrar_clic: {e}")
     
     def guardar_clics_ventana(self):
-        if self.clicks and self.selected_window:
-            filename = f"clics_{self.selected_window.title.replace('.exe', '').replace(' ', '_')}.json"
-            with open(filename, "w") as f:
+        if self.clicks:
+            # Solicitar al usuario que elija el nombre del archivo
+            file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+
+            if not file_path:
+                print("Guardado cancelado por el usuario.")
+                return  # No guardar nada si el usuario cancela
+            
+            try:
+                with open(file_path, "w") as f:
                 json.dump(self.clicks, f)
-            self.stop_thread = True
-            self.thread.join()
-            print(f"Clics guardados en {filename}")
-            self.limpiar_canvas()
-            self.dibujar_grid()
-            self.clicks = []
+                print(f"Clics guardados en {file_path}")
+                self.limpiar_canvas()
+                self.dibujar_grid()
+                self.clicks = []
+            except Exception as e:
+                print(f"Error al guardar los clics: {e}")
         else:
             print("No hay clics para guardar.")
     

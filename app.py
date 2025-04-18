@@ -84,16 +84,15 @@ class App:
         try:
             self.clicks.append((x, y))
 
-            canvas_x_offset = self.canvas.winfo_rootx()
-            canvas_y_offset = self.canvas.winfo_rooty()
+            canvas_x_offset = self.canvas.winfo_x()
+            canvas_y_offset = self.canvas.winfo_y()
             
             canvas_x = x - canvas_x_offset
             canvas_y = y - canvas_y_offset
 
             self.canvas.create_oval(canvas_x - 5, canvas_y - 5, canvas_x + 5, canvas_y + 5, fill="yellow")
             print(f"Clic detectado en: ({canvas_x}, {canvas_y})")
-            # Muestra los datos en el widget Text
-            self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
+            self.text_datos.insert(tk.END, f"Clic en: ({canvas_x}, {canvas_y})\n")
             self.text_datos.see(tk.END)  # Autoscroll al final del texto
         except Exception as e:
             print(f"Error en registrar_clic: {e}")

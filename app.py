@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+import os
 import json
 from modules import threads
 ancho, alto = 400 , 700
@@ -130,10 +131,14 @@ class App:
     
     def guardar_clics_ventana(self):
         if self.clicks:
+            # Obtener la ruta al directorio actual del script
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            # Definir la ruta predeterminada a la carpeta "recursos"
+            default_dir = os.path.join(current_dir, "recursos")
             # Solicitar al usuario que elija el nombre del archivo
-            file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+            file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")], initialdir=default_dir)
 
-            if not file_path:
+            if not file_path :
                 print("Guardado cancelado por el usuario.")
                 return  # No guardar nada si el usuario cancela
             

@@ -53,18 +53,23 @@ class App:
     
 
     def crear_tab_mapeo(self):
+        self.tab_mapeo.columnconfigure(0, weight=1)
+        self.tab_mapeo.columnconfigure(1, weight=1)
+        self.tab_mapeo.columnconfigure(2, weight=1)
+
         self.btn_iniciar = tk.Button(self.tab_mapeo, text="Iniciar Mapeo", command=lambda: threads.iniciar_mapeo_ventana(self))
-        self.btn_iniciar.grid(row=0, column=0, padx=5, pady=10, sticky="w")
+        self.btn_iniciar.grid(row=0, column=0, padx=35, pady=20, sticky="w")
 
         self.btn_detener = tk.Button(self.tab_mapeo, text="Detener Mapeo", command=lambda: threads.detener_mapeo_ventana(self))
-        self.btn_detener.grid(row=0, column=1, padx=5, pady=10, sticky="w")
+        self.btn_detener.grid(row=0, column=1, pady=20, sticky="w")
         
         self.btn_guardar = tk.Button(self.tab_mapeo, text="Guardar Clics", command=self.guardar_clics_ventana)
-        self.btn_guardar.grid(row=0, column=2, padx=5, pady=10, sticky="w")
+        self.btn_guardar.grid(row=0, column=2, padx=30, pady=20, sticky="w")
 
-        self.canvas.grid(row=1, column=0, columnspan=3, padx=1, pady=1)
-        self.text_datos = tk.Text(self.tab_mapeo, height=10, width=50)
-        self.text_datos.grid(row=2, column=0, columnspan=3, padx=1, pady=1)
+        self.canvas = tk.Canvas(self.tab_mapeo, width=382, height=382, bg="white")
+        self.canvas.grid(row=1, column=0, columnspan=3, padx=5)
+        self.text_datos = tk.Text(self.tab_mapeo, height=10, width=45)
+        self.text_datos.grid(row=2, column=0, columnspan=3, padx=10, pady=15)
 
 
         
@@ -74,10 +79,10 @@ class App:
         self.dibujar_grid()
 
     def dibujar_grid(self):
-        for i in range(0, alto, 20):  # Dibuja líneas verticales cada 20 píxeles
-            self.canvas.create_line(i, 0, i, ancho, fill="lightgray")
-        for i in range(0, ancho, 20):  # Dibuja líneas horizontales cada 20 píxeles
-            self.canvas.create_line(0, i, alto, i, fill="lightgray")
+        for i in range(-10, 382, 10):  # Dibuja líneas verticales cada 20 píxeles
+            self.canvas.create_line(i, -10, i, 382, fill="lightgray")
+        for i in range(-10, 382, 10):  # Dibuja líneas horizontales cada 20 píxeles
+            self.canvas.create_line(-10, i, 382, i, fill="lightgray")
 
     def limpiar_canvas(self):
         self.canvas.delete("all")  # Elimina todos los elementos del Canvas
@@ -95,10 +100,10 @@ class App:
             self.window_left = self.selected_window.left
             self.window_top = self.selected_window.top
 
-            self.region_left = 380
-            self.region_top = 40
-            self.region_width = 1168 - 380
-            self.region_height = 840 - 40
+            self.region_left = 305
+            self.region_top = 42
+            self.region_width = 1242 - self.region_left
+            self.region_height = 707 - self.region_top
     
     def registrar_clic(self, x, y):
         try:
@@ -116,10 +121,10 @@ class App:
             relative_y_region = relative_y_full - self.region_top
             self.clicks.append((x, y))
             
-            canvas_x = (relative_x_region / self.region_width) *  alto
-            canvas_y = (relative_y_region / self.region_height) * ancho
+            canvas_x = (relative_x_region / self.region_width) *  380
+            canvas_y = (relative_y_region / self.region_height) * 380
 
-            self.canvas.create_oval(canvas_x - 5, canvas_y - 5, canvas_x + 5, canvas_y + 5, fill="yellow")
+            self.canvas.create_oval(canvas_x - 3, canvas_y - 3, canvas_x + 3, canvas_y + 3, fill="yellow")
             print(f"Clic relativo a region detectado en: ({relative_x_region}, {relative_y_region})")
             self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
             self.text_datos.see(tk.END)  # Autoscroll al final del texto

@@ -20,11 +20,11 @@ def detener_mapeo_ventana(self):
         self.thread.join()
     print("Mapeo detenido.")
 
-def monitorear_clics_ventana(self):
-    while not self.stop_thread:
-        if not self.mapping_active:
+def monitorear_clics_ventana(app_instance):
+    while not app_instance.stop_thread:
+        if not app_instance.mapping_active:
             break
         if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) < 0:
             x, y = win32api.GetCursorPos()
-            self.registrar_clic(x, y)
+            app_instance.registrar_clic(x, y)
         time.sleep(0.1)

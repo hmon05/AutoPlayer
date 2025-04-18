@@ -5,6 +5,7 @@ import win32api
 import win32con
 import threading
 import time
+from modules import threads
 
 class App:
     def __init__(self, master):
@@ -45,10 +46,10 @@ class App:
     
 
     def crear_tab_mapeo(self):
-        self.btn_iniciar = tk.Button(self.tab_mapeo, text="Iniciar Mapeo", command=self.iniciar_mapeo_ventana)
+        self.btn_iniciar = tk.Button(self.tab_mapeo, text="Iniciar Mapeo", command=lambda: threads.iniciar_mapeo_ventana(self))
         self.btn_iniciar.pack(pady=10, side=tk.TOP)
 
-        self.btn_detener = tk.Button(self.tab_mapeo, text="Detener Mapeo", command=self.detener_mapeo_ventana)
+        self.btn_detener = tk.Button(self.tab_mapeo, text="Detener Mapeo", command=lambda: threads.detener_mapeo_ventana(self))
         self.btn_detener.pack(side=tk.TOP)  # Align to the top
         
         self.btn_guardar = tk.Button(self.tab_mapeo, text="Guardar Clics", command=self.guardar_clics_ventana)
@@ -79,23 +80,24 @@ class App:
             self.notebook.tab(self.tab_seleccion, state="disabled")  # Bloquea la pestaña de selección
             self.inicializar_mapeo()
     
-    def iniciar_mapeo_ventana(self):
-        if self.selected_window:
-            self.mapping_active = True
-            print(f"Iniciando mapeo de clics en la ventana: {self.selected_window}")
-            self.stop_thread = False
-            self.thread = threading.Thread(target=self.monitorear_clics_ventana)
-            self.thread.start()
-        else:
-            print("Selecciona una ventana primero.")
-    
-    def detener_mapeo_ventana(self):
-        self.mapping_active = False
-        self.stop_thread = True
-        self.thread.join()
-        print("Mapeo detenido.")
-    
+    def registrar_clic(self, x, y):
+        try:
+            self.clicks.append((x, y))
 
+            canvas_x_offset = self.canvas.winfo_rootx()
+            canvas_y_offset = self.canvas.winfo_rooty()
+            
+            canvas_x = x - canvas_x_offset
+            canvas_y = y - canvas_y_offset
+
+            self.canvas.create_oval(canvas_x - 5, canvas_y - 5, canvas_x + 5, canvas_y + 5, fill="yellow")
+            print(f"Clic detectado en: ({canvas_x}, {canvas_y})")
+            # Muestra los datos en el widget Text
+            self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
+            self.text_datos.see(tk.END)  # Autoscroll al final del texto
+        except Exception as e:
+            print(f"Error en registrar_clic: {e}")
+    
     def guardar_clics_ventana(self):
         if self.clicks and self.selected_window:
             filename = f"clics_{self.selected_window.title.replace('.exe', '').replace(' ', '_')}.json"
@@ -106,29 +108,6 @@ class App:
             print(f"Clics guardados en {filename}")
         else:
             print("No hay clics para guardar.")
-    
-    def registrar_clic(self, x, y):
-        try:
-            self.clicks.append((x, y))
-            # Ajustar las coordenadas del clic al canvas
-            canvas_x = x
-            canvas_y = y
-            self.canvas.create_oval(canvas_x-5, canvas_y-5, canvas_x+5, canvas_y+5, fill="yellow")
-            print(f"Clic detectado en: ({x}, {y})")
-            # Muestra los datos en el widget Text
-            self.text_datos.insert(tk.END, f"Clic en: ({x}, {y})\n")
-            self.text_datos.see(tk.END)  # Autoscroll al final del texto
-        except Exception as e:
-            print(f"Error en registrar_clic: {e}")
-
-    def monitorear_clics_ventana(self):
-        while not self.stop_thread:
-            if not self.mapping_active:
-                break
-            if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) < 0:
-                x, y = win32api.GetCursorPos()
-                self.registrar_clic(x, y)
-            time.sleep(0.1)
     
 
 root = tk.Tk()

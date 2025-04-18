@@ -83,6 +83,7 @@ class App:
         if self.selected_window:
             self.mapping_active = True
             print(f"Iniciando mapeo de clics en la ventana: {self.selected_window}")
+            self.stop_thread = False
             self.thread = threading.Thread(target=self.monitorear_clics_ventana)
             self.thread.start()
         else:
@@ -90,6 +91,8 @@ class App:
     
     def detener_mapeo_ventana(self):
         self.mapping_active = False
+        self.stop_thread = True
+        self.thread.join()
         print("Mapeo detenido.")
     
 
@@ -98,6 +101,8 @@ class App:
             filename = f"clics_{self.selected_window.title.replace('.exe', '').replace(' ', '_')}.json"
             with open(filename, "w") as f:
                 json.dump(self.clicks, f)
+            self.stop_thread = True
+            self.thread.join()
             print(f"Clics guardados en {filename}")
         else:
             print("No hay clics para guardar.")
@@ -117,13 +122,13 @@ class App:
             print(f"Error en registrar_clic: {e}")
 
     def monitorear_clics_ventana(self):
-        while True:
+        while not self.stop_thread:
             if not self.mapping_active:
                 break
             if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) < 0:
                 x, y = win32api.GetCursorPos()
                 self.registrar_clic(x, y)
-            time.sleep(0.001)
+            time.sleep(0.1)
     
 
 root = tk.Tk()

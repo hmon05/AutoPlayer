@@ -54,17 +54,19 @@ class App:
 
     def crear_tab_mapeo(self):
         self.btn_iniciar = tk.Button(self.tab_mapeo, text="Iniciar Mapeo", command=lambda: threads.iniciar_mapeo_ventana(self))
-        self.btn_iniciar.pack(pady=10, side=tk.TOP)
+        self.btn_iniciar.grid(row=0, column=0, padx=5, pady=10, sticky="w")
 
         self.btn_detener = tk.Button(self.tab_mapeo, text="Detener Mapeo", command=lambda: threads.detener_mapeo_ventana(self))
-        self.btn_detener.pack(side=tk.TOP)  # Align to the top
+        self.btn_detener.grid(row=0, column=1, padx=5, pady=10, sticky="w")
         
         self.btn_guardar = tk.Button(self.tab_mapeo, text="Guardar Clics", command=self.guardar_clics_ventana)
-        self.btn_guardar.pack(side=tk.TOP)  # Align to the top
+        self.btn_guardar.grid(row=0, column=2, padx=5, pady=10, sticky="w")
 
-        self.canvas.grid(row=0, column=0, padx=1, pady=1)
+        self.canvas.grid(row=1, column=0, columnspan=3, padx=1, pady=1)
         self.text_datos = tk.Text(self.tab_mapeo, height=10, width=50)
-        self.text_datos.grid(row=1, column=0, padx=1, pady=1)
+        self.text_datos.grid(row=2, column=0, columnspan=3, padx=1, pady=1)
+
+
         
     def inicializar_mapeo(self):
         self.clicks = []

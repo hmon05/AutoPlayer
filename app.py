@@ -62,9 +62,9 @@ class App:
         self.btn_guardar = tk.Button(self.tab_mapeo, text="Guardar Clics", command=self.guardar_clics_ventana)
         self.btn_guardar.pack(side=tk.TOP)  # Align to the top
 
-        self.canvas.pack(pady=1)
+        self.canvas.grid(row=0, column=0, padx=1, pady=1)
         self.text_datos = tk.Text(self.tab_mapeo, height=10, width=50)
-        self.text_datos.pack(side=tk.BOTTOM, pady=5)
+        self.text_datos.grid(row=1, column=0, padx=1, pady=1)
         
     def inicializar_mapeo(self):
         self.clicks = []

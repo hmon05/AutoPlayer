@@ -8,7 +8,7 @@ def iniciar_mapeo_ventana(self):
         self.mapping_active = True
         print(f"Iniciando mapeo de clics en la ventana: {self.selected_window}")
         self.stop_thread = False
-        self.thread = threading.Thread(target=monitorear_clics_ventana, args=(self,))
+        self.thread = threading.Thread(target=lambda: monitorear_clics_ventana(self))
         self.thread.start()
     else:
         print("Selecciona una ventana primero.")

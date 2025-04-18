@@ -77,22 +77,42 @@ class App:
         self.selected_window = self.window_manager.select_window(self.combobox_ventanas)
         if self.selected_window:
             self.notebook.select(self.tab_mapeo)  # Cambia a la pestaña de mapeo
-            self.notebook.tab(self.tab_seleccion, state="disabled")  # Bloquea la pestaña de selección
+            self.notebook.tab(self.tab_seleccion, state="disabled")
             self.inicializar_mapeo()
+
+            # Guardar las dimensiones de la ventana mapeada y de la region
+            self.window_width = self.selected_window.width
+            self.window_height = self.selected_window.height
+            self.window_left = self.selected_window.left
+            self.window_top = self.selected_window.top
+
+            self.region_left = 375
+            self.region_top = 40
+            self.region_width = 1168 - 375
+            self.region_height = 835 - 40
     
     def registrar_clic(self, x, y):
         try:
-            self.clicks.append((x, y))
-
-            canvas_x_offset = self.canvas.winfo_x()
-            canvas_y_offset = self.canvas.winfo_y()
+            # Coordenadas relativas a la ventana completa
+            relative_x_full = x - self.window_left
+            relative_y_full = y - self.window_top
             
-            canvas_x = x - canvas_x_offset
-            canvas_y = y - canvas_y_offset
+            # Verificar si el clic está dentro de la región
+            if not (self.region_left <= relative_x_full <= self.region_left + self.region_width and
+                    self.region_top <= relative_y_full <= self.region_top + self.region_height):
+                return  # Ignorar el clic
+
+            # Coordenadas relativas a la región
+            relative_x_region = relative_x_full - self.region_left
+            relative_y_region = relative_y_full - self.region_top
+            self.clicks.append((relative_x_region, relative_y_region))
+            
+            canvas_x = (relative_x_region / self.region_width) * 600
+            canvas_y = (relative_y_region / self.region_height) * 400
 
             self.canvas.create_oval(canvas_x - 5, canvas_y - 5, canvas_x + 5, canvas_y + 5, fill="yellow")
-            print(f"Clic detectado en: ({canvas_x}, {canvas_y})")
-            self.text_datos.insert(tk.END, f"Clic en: ({canvas_x}, {canvas_y})\n")
+            print(f"Clic relativo a region detectado en: ({relative_x_region}, {relative_y_region})")
+            self.text_datos.insert(tk.END, f"Clic en: ({relative_x_region}, {relative_y_region})\n")
             self.text_datos.see(tk.END)  # Autoscroll al final del texto
         except Exception as e:
             print(f"Error en registrar_clic: {e}")

@@ -2,10 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 import json
-import win32api
-import win32con
-import threading
-import time
 from modules import threads
 ancho, alto = 400 , 700
 
@@ -143,11 +139,11 @@ class App:
             
             try:
                 with open(file_path, "w") as f:
-                json.dump(self.clicks, f)
-                print(f"Clics guardados en {file_path}")
-                self.limpiar_canvas()
-                self.dibujar_grid()
-                self.clicks = []
+                    json.dump(self.clicks, f)
+                    print(f"Clics guardados en {file_path}")
+                    self.limpiar_canvas()
+                    self.dibujar_grid()
+                    self.clicks = []
             except Exception as e:
                 print(f"Error al guardar los clics: {e}")
         else:

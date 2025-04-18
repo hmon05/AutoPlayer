@@ -64,7 +64,7 @@ class App:
 
         self.canvas.pack(pady=1)
         self.text_datos = tk.Text(self.tab_mapeo, height=10, width=50)
-        self.text_datos.pack(side=tk.BOTTOM, pady=10)
+        self.text_datos.pack(side=tk.BOTTOM, pady=5)
         
     def inicializar_mapeo(self):
         self.clicks = []

@@ -39,6 +39,10 @@ class App:
         self.mapeo_image = ImageTk.PhotoImage(resized_mapeoImage)
         self.notebook.add(self.tab_mapeo, text="Mapeo de Clics", image=self.mapeo_image , compound=tk.LEFT)
         self.notebook.tab(self.tab_mapeo, state="disabled")
+        self.icono_minimapa = Image.open(os.path.abspath("icons/map.png"))
+        self.icono_minimapa = ImageTk.PhotoImage(self.icono_minimapa.resize((17,17)))
+        self.icono_log = Image.open(os.path.abspath("icons/dof.png"))
+        self.icono_log = ImageTk.PhotoImage(self.icono_log.resize((17,17)))
         ##########Seleccionar de ventana y/o personaje##########
         self.imagenes_razas = {
             "Feca": os.path.abspath("imgs/anu.png"),
@@ -132,15 +136,32 @@ class App:
         self.btn_guardar.grid(row=0, column=2, padx=30, pady=20, sticky="w")
 
         # Frame para el Canvas
-        self.frame_canvas = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)  # Estilo del borde
-        self.frame_canvas.grid(row=1, column=0, columnspan=3, padx=5, pady=5)  # Empaquetar el Frame
+        self.frame_canvas = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)  # Simula el borde general
+        self.frame_canvas.grid(row=1, column=0, columnspan=3, padx=5, pady=5)
 
-        self.canvas = tk.Canvas(self.frame_canvas, width=382, height=382, bg="white", highlightthickness=0) #Canvas dentro del Frame
-        self.canvas.pack() #Empaquetar el canvas dentro del Frame
+        # Label superpuesto (simulando esquina del borde con imagen y texto)
+        self.label_canvas = tk.Label(
+            self.frame_canvas,
+            text="Minimapa",  # Reemplaza con el texto
+            image=self.icono_minimapa,  # Reemplaza con el atributo de la imagen
+            compound=tk.LEFT,
+            bg="lightgrey",  # Mismo color que el frame
+            # bd=2, relief=tk.SOLID # Borde para la esquina - NOT NEEDED
+        )
+        self.label_canvas.image = self.icono_minimapa  # Mantén una referencia
+        self.label_canvas.place(relx=0, rely=0, x=0, y=0)  # Superpone en la esquina superior izquierda
+
+        # Frame para el Canvas
+        self.canvas = tk.Canvas(self.frame_canvas, width=382, height=382, bg="white", highlightthickness=0)  # Canvas dentro
+        self.canvas.pack(padx=5, pady=5) # Añade un padding para separar del borde simulado
 
         # Frame para el Textbox
-        self.frame_text = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)  # Estilo del borde
-        self.frame_text.grid(row=2, column=0, columnspan=3, padx=10, pady=15)  # Empaquetar el Frame
+        self.frame_text = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)
+        self.frame_text.grid(row=2, column=0, columnspan=3, padx=10, pady=15)
+        # Label superpuesto para el Textbox
+        self.label_text = tk.Label(self.frame_text, text="Log", image=self.icono_log, compound=tk.LEFT, bg="lightgrey")
+        self.label_text.image = self.icono_log
+        self.label_text.place(relx=0, rely=0, x=0, y=0)
 
         self.text_datos = tk.Text(self.frame_text, height=10, width=45, highlightthickness=0) #Textbox dentro del Frame
         self.text_datos.pack() #Empaquetar el Textbox dentro del Frame

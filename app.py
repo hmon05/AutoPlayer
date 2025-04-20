@@ -347,9 +347,6 @@ class App:
                 self.registrar_clic(x, y)
             time.sleep(0.1)
 
-
-        print(f"Personaje en {self.coordEnd}")
-
 root = tk.Tk()
 app = App(root)
 root.mainloop()

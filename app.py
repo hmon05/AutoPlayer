@@ -250,7 +250,7 @@ class App:
         """Restaurar stdout al cerrar la ventana."""
         self.detener_mapeo_ventana()
         sys.stdout = sys.__stdout__
-        super().destroy()
+        self.master.destroy()
 
     def moveMap(self):
         widthWindow, heightWindow = 480, 265

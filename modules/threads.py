@@ -1,6 +1,5 @@
 import heapq, pyautogui
 import time
-import threading
  
 # Diccionario de restricciones de movimiento
 restricciones_movimiento = {
@@ -40,6 +39,7 @@ acciones_mouse = {
     "derecha": (1570, 905)
 }
 
+
 def Mov_Personaje(Pos_actual, Pos_destino, VentanaPersonaje):
     destino_x, destino_y = Pos_destino[0], Pos_destino[1]    
     """Simula el movimiento del personaje desde la posición actual hasta el destino usando A* y `pyautogui`."""
@@ -61,7 +61,6 @@ def Mov_Personaje(Pos_actual, Pos_destino, VentanaPersonaje):
         # Mover el mouse a la posición correcta antes de hacer clic
         x, y = acciones_mouse[direccion]
         pyautogui.moveTo(x, y, 0.2)
-        pyautogui.mouseDown(button='left'),  pyautogui.mouseUp(button='left')
 
         # Pequeña pausa para asegurar movimiento correcto
         wait_for_map_load()
@@ -71,6 +70,7 @@ def Mov_Personaje(Pos_actual, Pos_destino, VentanaPersonaje):
         print(f"Se movió {direccion}: {Pos_actual}")
     posicion_actual = Pos_actual 
     return posicion_actual
+
 
 def a_estrella(inicio, destino):
     """Encuentra la ruta más corta evitando restricciones con el algoritmo A*."""
@@ -107,6 +107,7 @@ def a_estrella(inicio, destino):
 
     return None  # Si no encuentra ruta
 
+
 def GetMov_permitidos(actual):
     x, y = actual
     movimientos_permitidos = {}
@@ -132,6 +133,7 @@ def GetMov_permitidos(actual):
         movimientos_permitidos[direccion] = (dx, dy)
     
     return movimientos_permitidos
+
 
 def wait_for_map_load():
     region = (375, 40, 1168, 835)
@@ -161,6 +163,7 @@ def wait_for_map_load():
             # print("Mapa cargado. Continuando con el siguiente movimiento.")
             return
         time.sleep(0.2)
+
 
 def is_screen_black(region):
     threshold = 10

@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
-import os , json, sys , re
+import os, json, sys, re
+import threading
+import time
 from modules import threads
 import pygetwindow as gw
 from PIL import Image, ImageTk
@@ -122,10 +124,10 @@ class App:
         self.tab_mapeo.columnconfigure(1, weight=1)
         self.tab_mapeo.columnconfigure(2, weight=1)
 
-        self.btn_iniciar = tk.Button(self.tab_mapeo, text="Iniciar Mapeo", command=lambda: threads.iniciar_mapeo_ventana(self))
+        self.btn_iniciar = tk.Button(self.tab_mapeo, text="Iniciar Mapeo", command=self.iniciar_mapeo_ventana)
         self.btn_iniciar.grid(row=0, column=0, padx=35, pady=20, sticky="w")
 
-        self.btn_detener = tk.Button(self.tab_mapeo, text="Detener Mapeo", command=lambda: threads.detener_mapeo_ventana(self))
+        self.btn_detener = tk.Button(self.tab_mapeo, text="Detener Mapeo", command=self.detener_mapeo_ventana)
         self.btn_detener.grid(row=0, column=1, pady=20, sticky="w")
         
         self.btn_guardar = tk.Button(self.tab_mapeo, text="Guardar Clics", command=self.guardar_clics_ventana)
@@ -248,12 +250,12 @@ class App:
 
     def destroy(self):
         """Restaurar stdout al cerrar la ventana."""
-        threads.detener_mapeo_ventana(self)
+        self.detener_mapeo_ventana()
         sys.stdout = sys.__stdout__
         super().destroy()
 
     def moveMap(self):
-        widthWindow, heightWindow = 480 , 265
+        widthWindow, heightWindow = 480, 265
         if hasattr(self, 'WindowMap') and self.WindowMap.winfo_exists():
             self.WindowMap.lift()
             return
@@ -261,7 +263,7 @@ class App:
         self.WindowMap = tk.Toplevel(self)
         self.WindowMap.title("Lleva el personaje a la posición deseada")
         self.WindowMap.iconbitmap(os.path.abspath("farming_alquimis/icons/mapa.ico"))
-        self.centrar_ventana(self.WindowMap, widthWindow, heightWindow)    
+        self.centrar_ventana(self.WindowMap, widthWindow, heightWindow)
 
         # self.WindowMap.mainloop()
 
@@ -275,14 +277,14 @@ class App:
         self.Entry_coordEnd.pack(pady=5)
 
         # Etiqueta para solicitar el nombre de la ventana
-        self.label_programa = tk.Label(self.WindowMap, text="Seleccione la ventana del programa de la lista:", font = ('Comfortaa', 10))
-        self.label_programa.pack(pady = 5)
+        self.label_programa = tk.Label(self.WindowMap, text="Seleccione la ventana del programa de la lista:", font=('Comfortaa', 10))
+        self.label_programa.pack(pady=5)
         
         # Combobox para las ventanas disponibles
-        self.combobox_WindowProgram = ttk.Combobox(self.WindowMap, width = 34, font = ('Comfortaa', 10))#state="readonly"
-        self.combobox_WindowProgram.pack(pady = 5)
+        self.combobox_WindowProgram = ttk.Combobox(self.WindowMap, width=34, font=('Comfortaa', 10))#state="readonly"
+        self.combobox_WindowProgram.pack(pady=5)
         self.cargar_WindowProgram()
-
+        
         # Botón para confirmar
         self.BT_confWindowMap = tk.Button(self.WindowMap, text="Confirmar", font=('Comfortaa', 10), command= self.MovPer)
         self.BT_confWindowMap .pack(pady = 10)
@@ -319,6 +321,35 @@ class App:
         thread = threads.Thread(target=threads.Mov_Personaje, args=(self.coordStart, self.coordEnd, self.GetProgramWin))
         thread.daemon = True  # Para que el hilo se cierre si la app se cierra
         thread.start()
+        print(f"Personaje en {self.coordEnd}")
+    
+    def iniciar_mapeo_ventana(self):
+        if self.selected_window:
+            self.mapping_active = True
+            print(f"Iniciando mapeo de clics en la ventana: {self.selected_window}")
+            self.stop_thread = False
+            self.thread = threading.Thread(target=self.monitorear_clics_ventana)
+            self.thread.start()
+        else:
+            print("Selecciona una ventana primero.")
+
+    def detener_mapeo_ventana(self):
+        self.mapping_active = False
+        self.stop_thread = True
+        if hasattr(self, 'thread') and self.thread.is_alive():
+            self.thread.join()
+        print("Mapeo detenido.")
+
+    def monitorear_clics_ventana(self):
+        while not self.stop_thread:
+            if not self.mapping_active:
+                break
+            if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) < 0:
+                x, y = win32api.GetCursorPos()
+                self.registrar_clic(x, y)
+            time.sleep(0.1)
+
+
         print(f"Personaje en {self.coordEnd}")
 
 root = tk.Tk()

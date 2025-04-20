@@ -312,15 +312,13 @@ class App:
         self.combobox_WindowProgram['values'] = self.WindowProgram
     
     def MovPer(self):
-        self.coordStart = list(map(int, self.Entry_coordStart.get().split(',')))
-        self.coordEnd = list(map(int, self.Entry_coordEnd.get().split(',')))
-        self.GetProgramWin = self.combobox_WindowProgram.get()
-        self.WindowMap.destroy()
-        thread = threads.Thread(target = Mov_Personaje(self), args = (self.coordStart, self.coordEnd, self.GetProgramWin))
+        self.coordStart = list(map(int, self.Entry_coordStart.get().split(',')))        
+        self.coordEnd = list(map(int, self.Entry_coordEnd.get().split(',')))        
+        self.GetProgramWin = self.combobox_WindowProgram.get()        
+        self.WindowMap.destroy()        
+        thread = threads.Thread(target=threads.Mov_Personaje, args=(self.coordStart, self.coordEnd, self.GetProgramWin))
         thread.daemon = True  # Para que el hilo se cierre si la app se cierra
         thread.start()
-        # Mov_Personaje(self.coordStart, self.coordEnd, self.GetProgramWin)
-        print(f"{Mov_Personaje(self)}")
         print(f"Personaje en {self.coordEnd}")
 
 root = tk.Tk()

@@ -1,10 +1,7 @@
-import threading , heapq, pyautogui
+import heapq, pyautogui
 import time
-import win32api
-import win32con
-from pywinauto import Desktop
-import pygetwindow as gw
-
+import threading
+ 
 # Diccionario de restricciones de movimiento
 restricciones_movimiento = {
     (2, -10): ["arriba"],
@@ -43,32 +40,6 @@ acciones_mouse = {
     "derecha": (1570, 905)
 }
 
-def iniciar_mapeo_ventana(self):
-    if self.selected_window:
-        self.mapping_active = True
-        print(f"Iniciando mapeo de clics en la ventana: {self.selected_window}")
-        self.stop_thread = False
-        self.thread = threading.Thread(target=lambda: monitorear_clics_ventana(self))
-        self.thread.start()
-    else:
-        print("Selecciona una ventana primero.")
-
-def detener_mapeo_ventana(self):
-    self.mapping_active = False
-    self.stop_thread = True
-    if hasattr(self, 'thread') and self.thread.is_alive():
-        self.thread.join()
-    print("Mapeo detenido.")
-
-def monitorear_clics_ventana(app_instance):
-    while not app_instance.stop_thread:
-        if not app_instance.mapping_active:
-            break
-        if win32api.GetAsyncKeyState(win32con.VK_LBUTTON) < 0:
-            x, y = win32api.GetCursorPos()
-            app_instance.registrar_clic(x, y)
-        time.sleep(0.1)
-
 def Mov_Personaje(Pos_actual, Pos_destino, VentanaPersonaje):
     destino_x, destino_y = Pos_destino[0], Pos_destino[1]    
     """Simula el movimiento del personaje desde la posición actual hasta el destino usando A* y `pyautogui`."""
@@ -89,7 +60,6 @@ def Mov_Personaje(Pos_actual, Pos_destino, VentanaPersonaje):
     for direccion in rutaRecorrer:
         # Mover el mouse a la posición correcta antes de hacer clic
         x, y = acciones_mouse[direccion]
-        Ventana_Personaje(VentanaPersonaje)
         pyautogui.moveTo(x, y, 0.2)
         pyautogui.mouseDown(button='left'),  pyautogui.mouseUp(button='left')
 
@@ -162,20 +132,6 @@ def GetMov_permitidos(actual):
         movimientos_permitidos[direccion] = (dx, dy)
     
     return movimientos_permitidos
-
-def Ventana_Personaje(search_title):
-    windows = Desktop(backend="uia").windows()
-
-    # Obtener las ventanas abiertas
-    windows = gw.getWindowsWithTitle(search_title) 
-
-    # Buscar una ventana que contenga el título buscado
-    if windows:
-        win = windows[0]  # Tomar la primera coincidencia
-        win.activate()  # Traer la ventana al frente        
-        return win.title  # Retorna el nombre completo de la ventana encontrada
-    else:
-        print(f"No se encontró ninguna ventana que contenga: '{search_title}'")
 
 def wait_for_map_load():
     region = (375, 40, 1168, 835)

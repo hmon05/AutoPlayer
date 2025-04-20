@@ -1,4 +1,5 @@
 import pygetwindow as gw
+from pywinauto import Desktop
 
 class WindowManager:
     def cargar_ventanas(self, combobox_ventanas):
@@ -28,6 +29,19 @@ class WindowManager:
         # Establecer la geometría de la ventana
         self.geometry(f"{ancho}x{alto}+{x}+{y}")
 
+    def Ventana_Personaje(self, search_title):
+        windows = Desktop(backend="uia").windows()
+
+        # Obtener las ventanas abiertas
+        windows = gw.getWindowsWithTitle(search_title) 
+
+        # Buscar una ventana que contenga el título buscado
+        if windows:
+            win = windows[0]  # Tomar la primera coincidencia
+            win.activate()  # Traer la ventana al frente        
+            return win.title  # Retorna el nombre completo de la ventana encontrada
+        else:
+            print(f"No se encontró ninguna ventana que contenga: '{search_title}'")
     def validacion(texto):
         if texto == "":
             return True

@@ -138,35 +138,30 @@ class App:
         # Frame para el Canvas
         self.frame_canvas = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)  # Simula el borde general
         self.frame_canvas.grid(row=1, column=0, columnspan=3, padx=5, pady=5)
-
-        # Label superpuesto (simulando esquina del borde con imagen y texto)
-        self.label_canvas = tk.Label(
-            self.frame_canvas,
-            text="Minimapa",  # Reemplaza con el texto
-            image=self.icono_minimapa,  # Reemplaza con el atributo de la imagen
-            compound=tk.LEFT,
-            bg="lightgrey",  # Mismo color que el frame
-            # bd=2, relief=tk.SOLID # Borde para la esquina - NOT NEEDED
-        )
-        self.label_canvas.image = self.icono_minimapa  # Mantén una referencia
-        self.label_canvas.place(relx=0, rely=0, x=0, y=0)  # Superpone en la esquina superior izquierda
-
         # Frame para el Canvas
         self.canvas = tk.Canvas(self.frame_canvas, width=382, height=382, bg="white", highlightthickness=0)  # Canvas dentro
         self.canvas.pack(padx=5, pady=5) # Añade un padding para separar del borde simulado
 
+        # Label superpuesto (simulando esquina del borde con imagen y texto)
+        self.minimap_image = Image.open(os.path.abspath("icons/radar.ico"))
+        resized_minimapImage = self.minimap_image.resize((17, 17)) 
+        self.minimap_image = ImageTk.PhotoImage(resized_minimapImage)
+        self.label_canvas = tk.Label(self.frame_canvas,text="Minimapa", image=self.minimap_image, compound=tk.LEFT,bg="lightgrey")
+        # self.label_canvas.image = self.minimap_image  # Mantén una referencia
+        self.label_canvas.place(relx=0, rely=0, x=0, y=0)  # Superpone en la esquina superior izquierda
+        
         # Frame para el Textbox
         self.frame_text = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)
         self.frame_text.grid(row=2, column=0, columnspan=3, padx=10, pady=15)
-        # Label superpuesto para el Textbox
-        self.label_text = tk.Label(self.frame_text, text="Log", image=self.icono_log, compound=tk.LEFT, bg="lightgrey")
-        self.label_text.image = self.icono_log
-        self.label_text.place(relx=0, rely=0, x=0, y=0)
-
         self.text_datos = tk.Text(self.frame_text, height=10, width=45, highlightthickness=0) #Textbox dentro del Frame
-        self.text_datos.pack() #Empaquetar el Textbox dentro del Frame
-
-
+        self.text_datos.pack(padx=5, pady=5) #Empaquetar el Textbox dentro del Frame
+        # Label superpuesto para el Textbox
+        self.log_image = Image.open(os.path.abspath("icons/log.png"))
+        resized_logImage = self.log_image.resize((15, 15)) 
+        self.log_image = ImageTk.PhotoImage(resized_logImage)
+        self.label_text = tk.Label(self.frame_text, text="Log", image=self.log_image, compound=tk.LEFT, bg="lightgrey")
+        # self.label_text.image = self.icono_log
+        self.label_text.place(relx=0, rely=0, x=0, y=0)
         
     def inicializar_mapeo(self):
         self.clicks = []

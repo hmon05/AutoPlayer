@@ -1,9 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
-import os, json, sys, re
-import threading
-import time
+import os, json, sys, re , win32api, win32con, threading, time
 from modules import threads
 import pygetwindow as gw
 from PIL import Image, ImageTk
@@ -65,7 +63,7 @@ class App:
         }
 
         ##########Tab Mapeo###########
-        self.canvas = tk.Canvas(self.tab_mapeo, bg="white", width=ancho, height=alto)
+        self.canvas = tk.Canvas(self.tab_mapeo, bg="white", width=380, height=380)
         
         self.crear_tab_mapeo()  # Llama a crear_tab_mapeo aquí
     
@@ -168,10 +166,10 @@ class App:
             self.window_left = self.selected_window.left
             self.window_top = self.selected_window.top
 
-            self.region_left = 305
-            self.region_top = 42
-            self.region_width = 1242 - self.region_left
-            self.region_height = 707 - self.region_top
+            self.region_left = 370
+            self.region_top = 40
+            self.region_width = 1560 - self.region_left
+            self.region_height = 890 - self.region_top
     
     def registrar_clic(self, x, y):
         try:

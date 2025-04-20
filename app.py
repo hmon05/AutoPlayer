@@ -258,7 +258,7 @@ class App:
             self.WindowMap.lift()
             return
         # Crear ventana principal
-        self.WindowMap = tk.Toplevel(self)
+        self.WindowMap = tk.Toplevel(self.master)
         self.WindowMap.title("Lleva el personaje a la posición deseada")
         self.WindowMap.iconbitmap(os.path.abspath("farming_alquimis/icons/mapa.ico"))
         self.centrar_ventana(self.WindowMap, widthWindow, heightWindow)

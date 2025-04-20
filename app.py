@@ -2,11 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 import os, json, sys, re , win32api, win32con, threading, time
+
 import pygetwindow as gw
 from PIL import Image, ImageTk
 from modules.window_manager import WindowManager 
-import modules.threads as threads
-from modules.threads import Mov_Personaje
 
 ancho, alto = 400 , 700
 
@@ -132,10 +131,19 @@ class App:
         self.btn_guardar = tk.Button(self.tab_mapeo, text="Guardar Clics", command=self.guardar_clics_ventana)
         self.btn_guardar.grid(row=0, column=2, padx=30, pady=20, sticky="w")
 
-        self.canvas = tk.Canvas(self.tab_mapeo, width=382, height=382, bg="white")
-        self.canvas.grid(row=1, column=0, columnspan=3, padx=5)
-        self.text_datos = tk.Text(self.tab_mapeo, height=10, width=45)
-        self.text_datos.grid(row=2, column=0, columnspan=3, padx=10, pady=15)
+        # Frame para el Canvas
+        self.frame_canvas = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)  # Estilo del borde
+        self.frame_canvas.grid(row=1, column=0, columnspan=3, padx=5, pady=5)  # Empaquetar el Frame
+
+        self.canvas = tk.Canvas(self.frame_canvas, width=382, height=382, bg="white", highlightthickness=0) #Canvas dentro del Frame
+        self.canvas.pack() #Empaquetar el canvas dentro del Frame
+
+        # Frame para el Textbox
+        self.frame_text = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)  # Estilo del borde
+        self.frame_text.grid(row=2, column=0, columnspan=3, padx=10, pady=15)  # Empaquetar el Frame
+
+        self.text_datos = tk.Text(self.frame_text, height=10, width=45, highlightthickness=0) #Textbox dentro del Frame
+        self.text_datos.pack() #Empaquetar el Textbox dentro del Frame
 
 
         
@@ -164,7 +172,7 @@ class App:
             # Guardar las dimensiones de la ventana mapeada y de la region
             self.window_width = self.selected_window.width
             self.window_height = self.selected_window.height
-            self.window_left = self.selected_window.left
+            self.window_left = self.selected_window.left 
             self.window_top = self.selected_window.top
 
             self.region_left = 370
@@ -313,7 +321,6 @@ class App:
         thread = threading.Thread(target=threads.Mov_Personaje, args=(self.coordStart, self.coordEnd, self.GetProgramWin))
         thread.daemon = True  # Para que el hilo se cierre si la app se cierra
         thread.start()
-        print(f"{Mov_Personaje}")
         print(f"Personaje en {self.coordEnd}")
     
     def iniciar_mapeo_ventana(self):

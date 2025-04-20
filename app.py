@@ -224,8 +224,8 @@ class App:
     
     ##########Funciones para la Barra de Menu##########
     def bar_menu(self):
-        barr_menu = tk.Menu(self)
-        self.config(menu = barr_menu)
+        barr_menu = tk.Menu(self.master)
+        self.master.config(menu = barr_menu)
 
         menu_inicio = tk.Menu(barr_menu, tearoff = 0)
         barr_menu.add_cascade(label = 'Inicio', menu = menu_inicio)        

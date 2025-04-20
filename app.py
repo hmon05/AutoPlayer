@@ -210,6 +210,7 @@ class App:
                 print("Guardado cancelado por el usuario.")
                 return  # No guardar nada si el usuario cancela
             
+            self.text_datos.delete("1.0", tk.END)  # Borra el contenido del Textbox
             try:
                 with open(file_path, "w") as f:
                     json.dump(self.clicks, f)
@@ -235,6 +236,7 @@ class App:
         barr_menu.add_cascade(label = 'Mover personaje', command = self.moveMap) 
     
     def volver_inicio(self):
+        self.text_datos.delete("1.0", tk.END)  # Borra el contenido del Textbox
         self.notebook.select(0)  # Seleccionar la primera pestaña (Ventana de Personaje)
         # Limpiar el Combobox y recargarlo
         self.combobox_ventanas.set("")  # Limpia la selección

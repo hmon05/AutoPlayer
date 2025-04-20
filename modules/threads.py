@@ -61,6 +61,7 @@ def Mov_Personaje(Pos_actual, Pos_destino, VentanaPersonaje):
         # Mover el mouse a la posición correcta antes de hacer clic
         x, y = acciones_mouse[direccion]
         pyautogui.moveTo(x, y, 0.2)
+        pyautogui.mouseDown(button='left'),  pyautogui.mouseUp(button='left')
 
         # Pequeña pausa para asegurar movimiento correcto
         wait_for_map_load()
@@ -68,6 +69,7 @@ def Mov_Personaje(Pos_actual, Pos_destino, VentanaPersonaje):
         # Simulación de actualización de coordenadas
         Pos_actual = (Pos_actual[0] + movimientos[direccion][0], Pos_actual[1] + movimientos[direccion][1])
         print(f"Se movió {direccion}: {Pos_actual}")
+    print("!Has llegado a tu destino! ", Pos_actual)
     posicion_actual = Pos_actual 
     return posicion_actual
 

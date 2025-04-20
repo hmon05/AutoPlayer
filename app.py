@@ -2,10 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 import os, json, sys, re , win32api, win32con, threading, time
-
 import pygetwindow as gw
 from PIL import Image, ImageTk
 from modules.window_manager import WindowManager 
+import modules.threads as threads
+from modules.threads import Mov_Personaje
 
 ancho, alto = 400 , 700
 
@@ -312,6 +313,7 @@ class App:
         thread = threading.Thread(target=threads.Mov_Personaje, args=(self.coordStart, self.coordEnd, self.GetProgramWin))
         thread.daemon = True  # Para que el hilo se cierre si la app se cierra
         thread.start()
+        print(f"{Mov_Personaje}")
         print(f"Personaje en {self.coordEnd}")
     
     def iniciar_mapeo_ventana(self):

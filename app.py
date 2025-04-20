@@ -262,8 +262,12 @@ class App:
         # Crear ventana principal
         self.WindowMap = tk.Toplevel(self.master)
         self.WindowMap.title("Lleva el personaje a la posición deseada")
-        self.WindowMap.iconbitmap(os.path.abspath("farming_alquimis/icons/mapa.ico"))
-        self.centrar_ventana(self.WindowMap, widthWindow, heightWindow)
+        self.WindowMap.iconbitmap(os.path.abspath("icons/dof.ico"))
+        ancho_pantalla = root.winfo_screenwidth()
+        alto_pantalla = root.winfo_screenheight()
+        x = (ancho_pantalla // 2) - (widthWindow // 2)
+        y = (alto_pantalla // 2) - (heightWindow // 2)
+        self.WindowMap.geometry(f"{widthWindow}x{heightWindow}+{x}+{y}") 
 
         # self.WindowMap.mainloop()
 
@@ -289,19 +293,6 @@ class App:
         self.BT_confWindowMap = tk.Button(self.WindowMap, text="Confirmar", font=('Comfortaa', 10), command= self.MovPer)
         self.BT_confWindowMap .pack(pady = 10)
     
-    def centrar_ventana(self, ancho, alto):
-        """Centrar la ventana en la pantalla."""
-        # Obtener el tamaño de la pantalla
-        ancho_pantalla = self.winfo_screenwidth()
-        alto_pantalla = self.winfo_screenheight()
-
-        # Calcular la posición para centrar
-        x = (ancho_pantalla // 2) - (ancho // 2)
-        y = (alto_pantalla // 2) - (alto // 2)
-
-        # Establecer la geometría de la ventana
-        self.geometry(f"{ancho}x{alto}+{x}+{y}")
-
     def validacion(texto):
         if texto == "":
             return True

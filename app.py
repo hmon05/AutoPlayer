@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 import os, json, sys, re , win32api, win32con, threading, time
-from modules import threads
+
 import pygetwindow as gw
 from PIL import Image, ImageTk
 from modules.window_manager import WindowManager 
@@ -309,7 +309,7 @@ class App:
         self.coordEnd = list(map(int, self.Entry_coordEnd.get().split(',')))        
         self.GetProgramWin = self.combobox_WindowProgram.get()        
         self.WindowMap.destroy()        
-        thread = threads.Thread(target=threads.Mov_Personaje, args=(self.coordStart, self.coordEnd, self.GetProgramWin))
+        thread = threading.Thread(target=threads.Mov_Personaje, args=(self.coordStart, self.coordEnd, self.GetProgramWin))
         thread.daemon = True  # Para que el hilo se cierre si la app se cierra
         thread.start()
         print(f"Personaje en {self.coordEnd}")

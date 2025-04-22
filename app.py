@@ -135,31 +135,62 @@ class App:
         self.btn_guardar = tk.Button(self.tab_mapeo, text="Guardar Clics", command=self.guardar_clics_ventana)
         self.btn_guardar.grid(row=0, column=2, padx=30, pady=20, sticky="w")
 
+        # Frame para el nombre del archivo
+        self.frame_nombre_archivo = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=1)
+        self.frame_nombre_archivo.grid(row=1, column=0, columnspan=3, padx=10, pady=5)
+
+        self.label_nombre_archivo = tk.Label(self.frame_nombre_archivo, text="Nombre:", bg="lightgrey")
+        self.label_nombre_archivo.pack(side=tk.LEFT, padx=5)
+        
+        self.entry_nombre_archivo = tk.Entry(self.frame_nombre_archivo, width=30)
+        self.entry_nombre_archivo.pack(side=tk.LEFT)
+
         # Frame para el Canvas
         self.frame_canvas = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)  # Simula el borde general
-        self.frame_canvas.grid(row=1, column=0, columnspan=3, padx=5, pady=5)
-        # Frame para el Canvas
+        self.frame_canvas.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
+        
         self.canvas = tk.Canvas(self.frame_canvas, width=382, height=382, bg="white", highlightthickness=0)  # Canvas dentro
         self.canvas.pack(padx=5, pady=5) # Añade un padding para separar del borde simulado
-
-        # Label superpuesto (simulando esquina del borde con imagen y texto)
         self.minimap_image = Image.open(os.path.abspath("icons/radar.ico"))
         resized_minimapImage = self.minimap_image.resize((17, 17)) 
         self.minimap_image = ImageTk.PhotoImage(resized_minimapImage)
         self.label_canvas = tk.Label(self.frame_canvas,text="Minimapa", image=self.minimap_image, compound=tk.LEFT,bg="lightgrey")
-        # self.label_canvas.image = self.minimap_image  # Mantén una referencia
         self.label_canvas.place(relx=0, rely=0, x=0, y=0)  # Superpone en la esquina superior izquierda
+
+        #Frame edicion de clics
+        self.frame_edicion = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID, width=150)
+        self.frame_edicion.grid(row=2, column=2, padx=5, pady=5)
         
-        # Frame para el Textbox
-        self.frame_text = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID)
-        self.frame_text.grid(row=2, column=0, columnspan=3, padx=10, pady=15)
-        self.text_datos = tk.Text(self.frame_text, height=10, width=45, highlightthickness=0) #Textbox dentro del Frame
-        self.text_datos.pack(padx=5, pady=5) #Empaquetar el Textbox dentro del Frame
+        self.btn_agregar = tk.Button(self.frame_edicion, text="Agregar un recurso")
+        self.btn_agregar.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+
+        self.btn_borrar = tk.Button(self.frame_edicion, text="Borrar")
+        self.btn_borrar.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+
+        self.btn_subir = tk.Button(self.frame_edicion, text="↑")
+        self.btn_subir.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
+
+        self.btn_bajar = tk.Button(self.frame_edicion, text="↓")
+        self.btn_bajar.grid(row=3, column=0, padx=5, pady=5, sticky="ew")
+
+        self.btn_borrar_todo = tk.Button(self.frame_edicion, text="Borrar todo")
+        self.btn_borrar_todo.grid(row=4, column=0, padx=5, pady=5, sticky="ew")
+
+        self.btn_guardar_editado = tk.Button(self.frame_edicion, text="Guardar")
+        self.btn_guardar_editado.grid(row=5, column=0, padx=5, pady=5, sticky="ew")
+
+        #frame de visualizacion de los clics
+        self.label_list_clics = tk.Label(self.tab_mapeo, text="Clics:", image=self.log_image, compound=tk.LEFT, bg="lightgrey")
+        self.label_list_clics.grid(row=3, column=0, padx=5, pady=(10, 0))
+        self.text_datos = tk.Text(self.tab_mapeo, height=10, width=45, highlightthickness=0) #Textbox dentro del Frame
+        self.text_datos.grid(row=4, column=0, columnspan=3, padx=10, pady=15) #Empaquetar el Textbox dentro del Frame
+        
+        
         # Label superpuesto para el Textbox
+        self.label_text = tk.Label(self.tab_mapeo,text="Log",)
         self.log_image = Image.open(os.path.abspath("icons/log.png"))
         resized_logImage = self.log_image.resize((15, 15)) 
         self.log_image = ImageTk.PhotoImage(resized_logImage)
-        self.label_text = tk.Label(self.frame_text, text="Log", image=self.log_image, compound=tk.LEFT, bg="lightgrey")
         # self.label_text.image = self.icono_log
         self.label_text.place(relx=0, rely=0, x=0, y=0)
         

@@ -158,6 +158,12 @@ class App:
         self.label_canvas.place(relx=0, rely=0, x=0, y=0)  # Superpone en la esquina superior izquierda
 
         #Frame edicion de clics
+        
+        # Cargar la imagen del log aquí
+        self.log_image = Image.open(os.path.abspath("icons/log.png"))
+        resized_logImage = self.log_image.resize((15, 15))
+        self.log_image = ImageTk.PhotoImage(resized_logImage)
+
         self.frame_edicion = tk.Frame(self.tab_mapeo, bg="lightgrey", bd=2, relief=tk.SOLID, width=150)
         self.frame_edicion.grid(row=2, column=2, padx=5, pady=5)
         
@@ -185,14 +191,9 @@ class App:
         self.text_datos = tk.Text(self.tab_mapeo, height=10, width=45, highlightthickness=0) #Textbox dentro del Frame
         self.text_datos.grid(row=4, column=0, columnspan=3, padx=10, pady=15) #Empaquetar el Textbox dentro del Frame
         
-        
         # Label superpuesto para el Textbox
-        self.label_text = tk.Label(self.tab_mapeo,text="Log",)
-        self.log_image = Image.open(os.path.abspath("icons/log.png"))
-        resized_logImage = self.log_image.resize((15, 15)) 
-        self.log_image = ImageTk.PhotoImage(resized_logImage)
-        # self.label_text.image = self.icono_log
-        self.label_text.place(relx=0, rely=0, x=0, y=0)
+        self.label_list_clics = tk.Label(self.tab_mapeo, text="Clics:", image=self.log_image, compound=tk.LEFT, bg="lightgrey")
+        self.label_list_clics.grid(row=3, column=0, padx=5, pady=(10, 0))
         
     def inicializar_mapeo(self):
         self.clicks = []
